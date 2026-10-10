@@ -1,0 +1,23 @@
+services:
+  agent:
+    build: .
+    env_file:
+      - path: .env
+        required: false   # without it the smoke test is reported as skipped
+    environment:
+      CHROMA_HOST: chroma
+      CHROMA_PORT: "8000"
+      WORKSPACE_ROOT: /app/workspace
+    volumes:
+      - ./workspace:/app/workspace
+    depends_on:
+      - chroma
+
+  chroma:
+    # Keep in step with chromadb in requirements.txt.
+    image: chromadb/chroma:1.5.9
+    volumes:
+      - chroma-data:/data
+
+volumes:
+  chroma-data:

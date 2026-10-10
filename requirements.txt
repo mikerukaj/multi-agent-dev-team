@@ -1,0 +1,18 @@
+# Agent framework (constitution Principle IV)
+langgraph==1.2.12
+langchain-core==1.6.5
+langchain-anthropic==1.7.4
+
+# Memory backend (constitution Principle IV)
+chromadb==1.5.9
+# Chroma needs sqlite3 >= 3.35; older Linux hosts (e.g. RHEL 8 ships 3.26) use this wheel instead.
+# memory/sqlite_compat.py swaps it in only when the system sqlite3 is too old.
+pysqlite3-binary==0.5.4.post2; sys_platform == "linux" and platform_machine == "x86_64"
+
+# Structured outputs and configuration
+pydantic==2.13.5
+python-dotenv==1.2.3
+
+# Quality gates
+pytest==9.1.1
+ruff==0.16.9
