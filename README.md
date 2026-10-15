@@ -15,7 +15,7 @@ into its own workspace folder, runs it, and returns one validated, structured re
 | `execution_result` | Whether the last run succeeded, its exit code, stdout and stderr |
 
 The stack is fixed by the [project constitution](.specify/memory/constitution.md): **LangGraph**
-for orchestration, **Claude Opus 5.5** (`claude-opus-5-5`) as the only LLM, and **Chroma** for
+for orchestration, **Claude Sonnet 5.5** (`claude-sonnet-5-5`) as the only LLM, and **Chroma** for
 memory.
 
 ## Repository layout
@@ -38,7 +38,7 @@ For why something is built the way it is, start with
 
 ## Setup
 
-Requirements: Python 3.12, and an Anthropic API key with access to `claude-opus-5-5`.
+Requirements: Python 3.12, and an Anthropic API key with access to `claude-sonnet-5-5`.
 
 ```bash
 python3.12 -m venv .venv
@@ -131,6 +131,16 @@ The full reasoning is in [research.md](specs/001-coder-agent/research.md).
   instead of an error.
 - **Native tool calling for ReAct.** The model's text is the Thought and its tool calls are the
   Actions, so arguments arrive validated instead of being parsed out of free text.
+- **Claude Sonnet 5.5 rather than Opus 5.5, for cost.** Sonnet 5.5 costs half as much ($2 / $10
+  per million input / output tokens, against $4 / $20 for Opus 5.5). The choice isn't about tool
+  calling: both models reject forced tool choice, which the next point works around.
+- **Native structured output for the plan and explanation calls.** Both calls use
+  `with_structured_output(..., method="json_schema")`, which sends the schema as the API's
+  `output_config.format`, so the response is constrained to match it. LangChain's default
+  (`method="function_calling"`) gets JSON back by forcing a tool call (`tool_choice` of type
+  `tool`), and Claude Sonnet 5.5 rejects forced tool choice with a 400. `langchain-anthropic`
+  only avoids forcing for the models it knows about (Opus 5.5 and Fable 5.1 in 1.7.4), so the
+  plan call failed on Sonnet 5.5 until we set the method explicitly.
 - **Two-layer memory.**
   - A sliding window keeps the last 6 turns. A turn is one model message plus its tool results,
     and turns are never split.

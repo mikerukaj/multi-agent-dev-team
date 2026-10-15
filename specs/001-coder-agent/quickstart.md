@@ -6,7 +6,7 @@ How to prove the feature works end to end. Contracts: [coder-agent-api.md](contr
 ## Prerequisites
 
 - Python 3.12
-- An Anthropic API key with access to `claude-opus-5-5`
+- An Anthropic API key with access to `claude-sonnet-5-5`
 - Network access on first run (Chroma downloads its embedding model, about 80 MB)
 
 ## Setup

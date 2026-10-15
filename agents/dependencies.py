@@ -22,7 +22,7 @@ class AgentDependencies:
 
     @classmethod
     def from_settings(cls, settings: Settings) -> "AgentDependencies":
-        """Build the production dependencies: Opus 5.5, Chroma memory and the window buffer.
+        """Build the production dependencies: Sonnet 5.5, Chroma memory and the window buffer.
 
         Raises:
             AgentConfigurationError: if ANTHROPIC_API_KEY is not set or Chroma cannot be opened.

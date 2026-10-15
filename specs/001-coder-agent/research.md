@@ -65,7 +65,7 @@ Each entry records a decision, why it was made, and what else was considered.
 
 - **Decision**: Use Chroma's built-in default embedding function (a small local
   sentence-embedding model run through ONNX).
-- **Rationale**: Anthropic does not offer an embeddings API, and Principle IV fixes Opus 5.5 as the
+- **Rationale**: Anthropic does not offer an embeddings API, and Principle IV fixes Sonnet 5.5 as the
   *LLM*, not the embedder. Chroma's built-in function keeps memory fully inside Chroma
   (Principle IV: "All persistent agent memory and retrieval MUST go through Chroma") with no extra
   vendor or key.
@@ -145,7 +145,7 @@ Each entry records a decision, why it was made, and what else was considered.
   `chromadb` (1.x), `pydantic` (2.x), `python-dotenv`, `pytest`, `ruff`.
 - **Note**: The dev environment currently has `pydantic 1.9.2`; the project needs Pydantic 2,
   so set up a fresh virtual environment from `requirements.txt`.
-- **Model**: `claude-opus-5-5`, defined once as `CODER_MODEL` in `config.py`, with
+- **Model**: `claude-sonnet-5-5`, defined once as `CODER_MODEL` in `config.py`, with
   `max_tokens` set from `llm_max_tokens` (default 8192) so `write_file` calls carrying a whole
   file are not cut off, and `max_retries` from `llm_max_retries` (default 2).
 

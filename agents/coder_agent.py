@@ -134,7 +134,8 @@ class _CoderNodes:
         """Decide whether this is a coding task and make the ordered plan (spec FR-002)."""
         messages = build_llm_messages(state, PLAN_PROMPT, self.dependencies)
         decision = _invoke_model(
-            self.dependencies.llm.with_structured_output(PlanDecision), messages
+            self.dependencies.llm.with_structured_output(PlanDecision, method="json_schema"),
+            messages,
         )
         self._remember(
             [
@@ -286,7 +287,8 @@ class _CoderNodes:
             state, instruction, self.dependencies, include_conversation=False
         )
         draft = _invoke_model(
-            self.dependencies.llm.with_structured_output(ExplanationDraft), messages
+            self.dependencies.llm.with_structured_output(ExplanationDraft, method="json_schema"),
+            messages,
         )
         return draft.explanation
 

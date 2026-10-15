@@ -83,7 +83,7 @@ The following choices are fixed and MUST NOT be substituted without a constituti
 
 - **Agent framework**: LangGraph. All agent orchestration, state and control flow MUST be
   expressed as LangGraph graphs and nodes; no parallel ad-hoc orchestration loops.
-- **LLM**: Claude Opus 5.5 (model ID `claude-opus-5-5`) via the Anthropic API for all agents.
+- **LLM**: Claude Sonnet 5.5 (model ID `claude-sonnet-5-5`) via the Anthropic API for all agents.
 - **Memory backend**: Chroma. All persistent agent memory and retrieval MUST go through Chroma;
   no second vector store or ad-hoc file-based memory.
 
@@ -106,7 +106,7 @@ accidental leaks of credentials.
 
 - Language: Python 3, with dependencies pinned in `requirements.txt`.
 - Orchestration: LangGraph (Principle IV).
-- LLM: Claude Opus 5.5, `claude-opus-5-5` (Principle IV).
+- LLM: Claude Sonnet 5.5, `claude-sonnet-5-5` (Principle IV).
 - Memory: Chroma (Principle IV).
 - Testing: `pytest`.
 - Lint and format: Ruff.

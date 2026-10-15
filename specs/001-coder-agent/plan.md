@@ -36,7 +36,7 @@ store is queried before **every** LLM call (`plan`, each `reason`, and `finalize
 Exact versions are pinned in `requirements.txt` at implementation time
 ([research R11](research.md#r11-dependencies-and-versions)).
 
-**LLM**: Claude Opus 5.5, `claude-opus-5-5` (constitution Principle IV)
+**LLM**: Claude Sonnet 5.5, `claude-sonnet-5-5` (constitution Principle IV)
 
 **Storage**:
 - Chroma, embedded `PersistentClient` at `.chroma/`, or `HttpClient` when `CHROMA_HOST` is set.
@@ -73,7 +73,7 @@ No open NEEDS CLARIFICATION items; all were resolved in [research.md](research.m
 | I. Clean Code | Small single-purpose modules (tools, memory, graph nodes, schemas); type hints and docstrings on public APIs; limits and prompts are named constants in `config.py` / `agents/prompts.py`; tool errors are explicit `ERROR:` observations; agent errors are typed exceptions; Ruff gate. | ✅ | ✅ |
 | II. Structured Agent Outputs | `CoderResult` and its sub-models are Pydantic v2 with `extra="forbid"` and cross-field validators; validated before return; the `plan` node uses structured output ([data-model.md](data-model.md)). | ✅ | ✅ |
 | III. Smoke Test Gate | `tests/integration/test_smoke_coder_agent.py` runs the compiled graph on the Los Angeles task, asserts the four fields are non-empty, and skips with a reason when there is no key ([contract](contracts/coder-agent-api.md#smoke-test-contract-principle-iii-spec-fr-012)). | ✅ | ✅ |
-| IV. Mandated Stack | Orchestration in LangGraph only; LLM is `claude-opus-5-5`; all memory goes through Chroma. The embedder is Chroma's built-in function, which is part of Chroma and not a second LLM or store ([R5](research.md#r5-embeddings-for-chroma)). | ✅ | ✅ |
+| IV. Mandated Stack | Orchestration in LangGraph only; LLM is `claude-sonnet-5-5`; all memory goes through Chroma. The embedder is Chroma's built-in function, which is part of Chroma and not a second LLM or store ([R5](research.md#r5-embeddings-for-chroma)). | ✅ | ✅ |
 | V. Simplicity & Config | One `config.py` for the model ID, Chroma settings, limits and paths; secrets come from env; `.env.example` lists all variables; no speculative abstractions (no repeat-action detector, no summarizer). | ✅ | ✅ |
 
 **Gate result**: PASS. No violations, so Complexity Tracking is empty.

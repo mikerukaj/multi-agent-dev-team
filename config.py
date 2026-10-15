@@ -10,7 +10,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-CODER_MODEL = "claude-opus-5-5"
+CODER_MODEL = "claude-sonnet-5-5"
 """The only LLM the project uses (constitution Principle IV)."""
 
 MAX_ITERATIONS = 10

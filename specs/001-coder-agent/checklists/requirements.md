@@ -35,4 +35,4 @@
   smoke test task, not an implementation choice for the agent itself.
 - The result field names in FR-007 (`code`, `explanation`, `plan`, `execution_result`) are named
   on purpose: they are the contract the smoke test checks.
-- The mandated stack from the constitution (LangGraph, Opus 5.5, Chroma) is left to `/speckit-plan`.
+- The mandated stack from the constitution (LangGraph, Sonnet 5.5, Chroma) is left to `/speckit-plan`.
