@@ -10,6 +10,7 @@ dist/
 
 # Secrets
 .env
+.env*.local
 
 # Agent runtime data
 workspace/
@@ -21,3 +22,6 @@ Thumbs.db
 *.swp
 *.tmp
 .idea/
+
+# Claude & Speckit
+
