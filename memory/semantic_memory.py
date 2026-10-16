@@ -18,7 +18,7 @@ class MemoryRecord:
     """One piece of agent context stored in long-term memory."""
 
     kind: str
-    """One of: task, plan, thought, observation, result."""
+    """One of: task, plan, thought, observation, result, requirement, specification."""
 
     text: str
     run_id: str

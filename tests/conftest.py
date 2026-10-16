@@ -19,6 +19,13 @@ from agents.dependencies import AgentDependencies
 from config import Settings
 from memory.conversation_buffer import ConversationBuffer
 from memory.semantic_memory import SemanticMemory
+from orchestration.protocol import (
+    AcceptanceCriterion,
+    PlannedTask,
+    Requirement,
+    SpecificationDraft,
+    TechnicalSpecification,
+)
 
 EMBEDDING_DIMENSIONS = 64
 
@@ -162,3 +169,37 @@ def make_dependencies(
         )
 
     return build
+
+
+def make_specification(task_count: int = 2) -> TechnicalSpecification:
+    """A valid spec: requirements R1..Rn, one criterion each, and tasks T1..Tn where Tk covers Rk
+    and depends on Tk-1."""
+    numbers = range(1, task_count + 1)
+    return TechnicalSpecification(
+        name="LA clock",
+        description="A command-line tool that prints the current time in Los Angeles.",
+        requirements=[Requirement(id=f"R{n}", statement=f"Requirement {n}.") for n in numbers],
+        acceptance_criteria=[
+            AcceptanceCriterion(id=f"AC{n}", requirement_id=f"R{n}", text=f"Check {n}.")
+            for n in numbers
+        ],
+        out_of_scope=["Other time zones."],
+        tasks=[
+            PlannedTask(
+                id=f"T{n}",
+                title=f"Task {n}",
+                description=f"Write code for requirement {n}.",
+                acceptance_criteria=[f"Requirement {n} works."],
+                priority="high",
+                covers=[f"R{n}"],
+                depends_on=[f"T{n - 1}"] if n > 1 else [],
+            )
+            for n in numbers
+        ],
+    )
+
+
+@pytest.fixture
+def specification_draft() -> SpecificationDraft:
+    """A PM ``specify`` answer that accepts the requirement with a valid two-task spec."""
+    return SpecificationDraft(is_software_requirement=True, specification=make_specification())

@@ -11,13 +11,14 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
+from langchain_core.messages import AIMessage, ToolMessage
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
 from agents.context import build_llm_messages
 from agents.dependencies import AgentDependencies
-from agents.errors import CoderAgentError, InvalidTaskError, LLMServiceError
+from agents.errors import CoderAgentError, InvalidTaskError
+from agents.llm import invoke_model
 from agents.prompts import EXPLANATION_PROMPT, PLAN_PROMPT, REASON_STATUS_TEMPLATE
 from agents.schemas import (
     CoderResult,
@@ -133,7 +134,7 @@ class _CoderNodes:
     def plan(self, state: CoderState) -> dict[str, Any]:
         """Decide whether this is a coding task and make the ordered plan (spec FR-002)."""
         messages = build_llm_messages(state, PLAN_PROMPT, self.dependencies)
-        decision = _invoke_model(
+        decision = invoke_model(
             self.dependencies.llm.with_structured_output(PlanDecision, method="json_schema"),
             messages,
         )
@@ -164,7 +165,7 @@ class _CoderNodes:
             revisions=state["revision_attempts"],
             max_revisions=MAX_REVISIONS,
         )
-        response = _invoke_model(
+        response = invoke_model(
             self.tool_model, build_llm_messages(state, status, self.dependencies)
         )
         thought = response.text.strip()
@@ -286,7 +287,7 @@ class _CoderNodes:
         messages = build_llm_messages(
             state, instruction, self.dependencies, include_conversation=False
         )
-        draft = _invoke_model(
+        draft = invoke_model(
             self.dependencies.llm.with_structured_output(ExplanationDraft, method="json_schema"),
             messages,
         )
@@ -349,16 +350,6 @@ def _last_ai_message(state: CoderState) -> AIMessage:
         if isinstance(message, AIMessage):
             return message
     return AIMessage(content="")
-
-
-def _invoke_model(model: Any, messages: list[BaseMessage]) -> Any:
-    """Call the model, turning any failure into ``LLMServiceError``."""
-    try:
-        return model.invoke(messages)
-    except CoderAgentError:
-        raise
-    except Exception as error:
-        raise LLMServiceError(f"Model call failed: {error}") from error
 
 
 def main(argv: list[str] | None = None) -> int:

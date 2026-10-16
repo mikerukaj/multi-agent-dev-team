@@ -1,4 +1,4 @@
-"""Errors raised by the Coder agent's public API.
+"""Errors raised by the Coder agent's and the PM-led team's public APIs.
 
 Failures of the *generated* code are never raised; they are reported in ``execution_result``.
 """
@@ -22,3 +22,12 @@ class AgentConfigurationError(CoderAgentError):
 
 class LLMServiceError(CoderAgentError):
     """The model call failed after retries, or its structured answer could not be parsed."""
+
+
+class InvalidRequirementError(CoderAgentError):
+    """The requirement is empty or whitespace only. Raised before any work is done."""
+
+
+class TaskPlanningError(CoderAgentError):
+    """The task list is still longer than MAX_TASKS after MAX_CONSOLIDATION_ATTEMPTS
+    consolidations. Raised before any task is handed off."""

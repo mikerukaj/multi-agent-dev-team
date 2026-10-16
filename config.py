@@ -1,4 +1,4 @@
-"""Single source of configuration for the Coder agent (constitution Principle V).
+"""Single source of configuration for the agents (constitution Principle V).
 
 Fixed values are module constants. Values that may differ between environments are fields on
 ``Settings`` and can be overridden with environment variables (or a ``.env`` file).
@@ -18,6 +18,12 @@ MAX_ITERATIONS = 10
 
 MAX_REVISIONS = 3
 """Maximum code runs after the first failed run."""
+
+MAX_TASKS = 8
+"""Most tasks the PM agent may hand off for one requirement; more triggers consolidation."""
+
+MAX_CONSOLIDATION_ATTEMPTS = 2
+"""Most times the PM agent may consolidate an over-long task list before the run fails."""
 
 ENTRYPOINT = "main.py"
 """File the agent writes as the program's entry point and runs by default."""

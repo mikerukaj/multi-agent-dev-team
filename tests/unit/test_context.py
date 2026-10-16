@@ -3,7 +3,7 @@
 import pytest
 from langchain_core.messages import AIMessage, SystemMessage, ToolMessage
 
-from agents.context import build_llm_messages
+from agents.context import build_llm_messages, build_pm_messages
 from agents.dependencies import AgentDependencies
 from agents.errors import AgentConfigurationError
 from memory.semantic_memory import MemoryRecord
@@ -70,3 +70,25 @@ def test_from_settings_requires_api_key(settings, monkeypatch):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     with pytest.raises(AgentConfigurationError, match="ANTHROPIC_API_KEY"):
         AgentDependencies.from_settings(settings)
+
+
+PM_STATE = {"run_id": "r1", "requirement": "Build a clock for Los Angeles"}
+
+
+def test_pm_messages_retrieve_memory_once(make_dependencies, retrieve_spy):
+    build_pm_messages(PM_STATE, "Specify it.", make_dependencies())
+    assert retrieve_spy.calls == 1
+
+
+def test_pm_messages_hold_requirement_instruction_and_past_context(make_dependencies, memory):
+    dependencies = make_dependencies()
+    without = build_pm_messages(PM_STATE, "Specify it.", dependencies)
+    assert "Relevant past context" not in without[0].content
+    assert "Build a clock for Los Angeles" in without[1].content
+    assert without[-1].content == "Specify it."
+
+    memory.add([MemoryRecord(kind="specification", text="Clock for Los Angeles", run_id="old")])
+    with_context = build_pm_messages(PM_STATE, "Specify it.", dependencies)
+    assert isinstance(with_context[0], SystemMessage)
+    assert "PM (product manager) agent" in with_context[0].content
+    assert "Relevant past context" in with_context[0].content
